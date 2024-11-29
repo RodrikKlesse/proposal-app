@@ -8,6 +8,8 @@ import com.klesse.proposal_app.repository.ProposalRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class ProposalService {
@@ -18,5 +20,9 @@ public class ProposalService {
         Proposal proposal = ProposalMapper.INSTANCE.convertDtoToProposal(request);
         proposalRepository.save(proposal);
         return ProposalMapper.INSTANCE.convertEntityToDto(proposal);
+    }
+
+    public List<ProposalResponseDTO> getAllProposals() {
+        return ProposalMapper.INSTANCE.convertListEntityToListDto(proposalRepository.findAll());
     }
 }
