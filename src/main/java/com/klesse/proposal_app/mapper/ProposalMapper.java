@@ -7,6 +7,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
+import java.text.NumberFormat;
 import java.util.List;
 
 @Mapper
@@ -30,7 +31,12 @@ public interface ProposalMapper {
     @Mapping(target = "ssn", source = "users.ssn")
     @Mapping(target = "phoneNumber", source = "users.phoneNumber")
     @Mapping(target = "wage", source = "users.wage")
+    @Mapping(target = "loanAmount", expression = "java(setLoanAmount(proposal))")
     ProposalResponseDTO convertEntityToDto(Proposal proposal);
 
     List<ProposalResponseDTO> convertListEntityToListDto(Iterable<Proposal> proposals);
+
+    default String setLoanAmount(Proposal proposal) {
+        return NumberFormat.getCurrencyInstance().format(proposal.getLoanAmount());
+    }
 }

@@ -15,7 +15,7 @@ public class ProposalResponseDTO {
     private String ssn;
     private String phoneNumber;
     private Double wage;
-    private Double loanAmount;
+    private String loanAmount;
     private int paymentTerm;
     private Boolean status;
     private String description;
