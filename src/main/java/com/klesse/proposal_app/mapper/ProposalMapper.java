@@ -1,12 +1,16 @@
 package com.klesse.proposal_app.mapper;
 
 import com.klesse.proposal_app.dto.ProposalRequestDTO;
+import com.klesse.proposal_app.dto.ProposalResponseDTO;
 import com.klesse.proposal_app.entity.Proposal;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.factory.Mappers;
 
 @Mapper
 public interface ProposalMapper {
+
+    ProposalMapper INSTANCE = Mappers.getMapper(ProposalMapper.class);
 
     @Mapping(target = "users.name", source = "name")
     @Mapping(target = "users.lastName", source = "lastName")
@@ -18,4 +22,11 @@ public interface ProposalMapper {
     @Mapping(target = "integrate", ignore = true)
     @Mapping(target = "description", ignore = true)
     Proposal convertDtoToProposal(ProposalRequestDTO request);
+
+    @Mapping(target = "name", source = "users.name")
+    @Mapping(target = "lastName", source = "users.lastName")
+    @Mapping(target = "ssn", source = "users.ssn")
+    @Mapping(target = "phoneNumber", source = "users.phoneNumber")
+    @Mapping(target = "wage", source = "users.wage")
+    ProposalResponseDTO convertEntityToDto(Proposal proposal);
 }
