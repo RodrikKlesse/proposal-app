@@ -1,7 +1,6 @@
 package com.klesse.proposal_app.config;
 
-import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.core.QueueBuilder;
+import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -40,5 +39,22 @@ public class RabbitMQConfig {
     @Bean
     public ApplicationListener<ApplicationReadyEvent> adminInitializer(RabbitAdmin rabbitAdmin) {
         return event -> rabbitAdmin.initialize();
+    }
+
+    @Bean
+    public FanoutExchange createFanoutExchangePendingProposal() {
+        return ExchangeBuilder.fanoutExchange("pending-proposal.ex").build();
+    }
+
+    @Bean
+    public Binding createBindingPendingProposalMSCreditAnalysis() {
+        return BindingBuilder.bind(createPendingProposalQueueMsCreditAnalysis())
+                .to(createFanoutExchangePendingProposal());
+    }
+
+    @Bean
+    public Binding createBindingPendingProposalMSNotification() {
+        return BindingBuilder.bind(createPendingProposalQueueNotification())
+                .to(createFanoutExchangePendingProposal());
     }
 }
