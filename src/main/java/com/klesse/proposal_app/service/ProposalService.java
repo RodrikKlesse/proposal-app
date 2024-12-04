@@ -6,17 +6,27 @@ import com.klesse.proposal_app.entity.Proposal;
 import com.klesse.proposal_app.mapper.ProposalMapper;
 import com.klesse.proposal_app.repository.ProposalRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@AllArgsConstructor
 public class ProposalService {
 
     private ProposalRepository proposalRepository;
 
     private NotificationService notificationService;
+
+    private String exchange;
+
+    public ProposalService(ProposalRepository proposalRepository,
+                           NotificationService notificationService,
+                           @Value("${rabbitMQ.pendingproposal.exchange}") String exchange) {
+        this.proposalRepository = proposalRepository;
+        this.notificationService = notificationService;
+        this.exchange = exchange;
+    }
 
     public ProposalResponseDTO createProposal(ProposalRequestDTO request) {
         Proposal proposal = ProposalMapper.INSTANCE.convertDtoToProposal(request);
@@ -24,7 +34,7 @@ public class ProposalService {
 
         ProposalResponseDTO response = ProposalMapper.INSTANCE.convertEntityToDto(proposal);
 
-        notificationService.notify(response,"pending-proposal.ex");
+        notificationService.notify(response, exchange);
 
         return response;
     }
