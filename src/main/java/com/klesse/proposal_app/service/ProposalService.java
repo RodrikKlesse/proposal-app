@@ -16,10 +16,17 @@ public class ProposalService {
 
     private ProposalRepository proposalRepository;
 
+    private NotificationService notificationService;
+
     public ProposalResponseDTO createProposal(ProposalRequestDTO request) {
         Proposal proposal = ProposalMapper.INSTANCE.convertDtoToProposal(request);
         proposalRepository.save(proposal);
-        return ProposalMapper.INSTANCE.convertEntityToDto(proposal);
+
+        ProposalResponseDTO response = ProposalMapper.INSTANCE.convertEntityToDto(proposal);
+
+        notificationService.notify(response,"pending-proposal.ex");
+
+        return response;
     }
 
     public List<ProposalResponseDTO> getAllProposals() {
