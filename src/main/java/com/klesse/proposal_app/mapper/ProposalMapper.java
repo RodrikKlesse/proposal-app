@@ -22,7 +22,7 @@ public interface ProposalMapper {
     @Mapping(target = "users.wage", source = "wage")
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "status", ignore = true)
-    @Mapping(target = "integrate", ignore = true)
+    @Mapping(target = "integrate", constant = "true")
     @Mapping(target = "description", ignore = true)
     Proposal convertDtoToProposal(ProposalRequestDTO request);
 

@@ -5,7 +5,6 @@ import com.klesse.proposal_app.dto.ProposalResponseDTO;
 import com.klesse.proposal_app.entity.Proposal;
 import com.klesse.proposal_app.mapper.ProposalMapper;
 import com.klesse.proposal_app.repository.ProposalRepository;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -32,11 +31,18 @@ public class ProposalService {
         Proposal proposal = ProposalMapper.INSTANCE.convertDtoToProposal(request);
         proposalRepository.save(proposal);
 
-        ProposalResponseDTO response = ProposalMapper.INSTANCE.convertEntityToDto(proposal);
+        notifierRabbitMQ(proposal);
 
-        notificationService.notify(response, exchange);
+        return ProposalMapper.INSTANCE.convertEntityToDto(proposal);
+    }
 
-        return response;
+    private void notifierRabbitMQ(Proposal proposal) {
+        try {
+            notificationService.notify(proposal, exchange);
+        } catch (RuntimeException ex) {
+            proposal.setIntegrate(false);
+            proposalRepository.save(proposal);
+        }
     }
 
     public List<ProposalResponseDTO> getAllProposals() {
