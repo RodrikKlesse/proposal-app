@@ -4,7 +4,6 @@ import com.klesse.proposal_app.dto.ProposalRequestDTO;
 import com.klesse.proposal_app.dto.ProposalResponseDTO;
 import com.klesse.proposal_app.service.ProposalService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;

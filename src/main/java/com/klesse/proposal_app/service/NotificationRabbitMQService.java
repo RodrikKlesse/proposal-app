@@ -1,6 +1,5 @@
 package com.klesse.proposal_app.service;
 
-import com.klesse.proposal_app.dto.ProposalResponseDTO;
 import com.klesse.proposal_app.entity.Proposal;
 import lombok.AllArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -8,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 @AllArgsConstructor
 @Service
-public class NotificationService {
+public class NotificationRabbitMQService {
 
     private RabbitTemplate rabbitTemplate;
 

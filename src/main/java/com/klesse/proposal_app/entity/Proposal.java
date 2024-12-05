@@ -1,9 +1,11 @@
 package com.klesse.proposal_app.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -22,6 +24,8 @@ public class Proposal {
 
     @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "userId")
+    @JsonBackReference
+    @ToString.Exclude
     private Users users;
 
 }

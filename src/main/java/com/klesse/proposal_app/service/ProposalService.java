@@ -13,17 +13,17 @@ import java.util.List;
 @Service
 public class ProposalService {
 
-    private ProposalRepository proposalRepository;
+    private final ProposalRepository proposalRepository;
 
-    private NotificationService notificationService;
+    private final NotificationRabbitMQService notificationRabbitMQService;
 
-    private String exchange;
+    private final String exchange;
 
     public ProposalService(ProposalRepository proposalRepository,
-                           NotificationService notificationService,
+                           NotificationRabbitMQService notificationRabbitMQService,
                            @Value("${rabbitMQ.pendingproposal.exchange}") String exchange) {
         this.proposalRepository = proposalRepository;
-        this.notificationService = notificationService;
+        this.notificationRabbitMQService = notificationRabbitMQService;
         this.exchange = exchange;
     }
 
@@ -38,7 +38,7 @@ public class ProposalService {
 
     private void notifierRabbitMQ(Proposal proposal) {
         try {
-            notificationService.notify(proposal, exchange);
+            notificationRabbitMQService.notify(proposal, exchange);
         } catch (RuntimeException ex) {
             proposal.setIntegrate(false);
             proposalRepository.save(proposal);

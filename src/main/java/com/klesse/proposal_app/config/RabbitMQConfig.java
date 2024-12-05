@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMQConfig {
 
-    private String exchange;
+    private final String exchange;
 
     public RabbitMQConfig(@Value("${rabbitMQ.pendingproposal.exchange}") String exchange) {
         this.exchange = exchange;
