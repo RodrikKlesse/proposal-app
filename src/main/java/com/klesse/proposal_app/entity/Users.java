@@ -1,6 +1,6 @@
 package com.klesse.proposal_app.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,7 +23,7 @@ public class Users {
     private Double wage;
 
     @OneToOne(mappedBy = "users")
-    @JsonManagedReference
+    @JsonBackReference
     @ToString.Exclude
     private Proposal proposal;
 }
