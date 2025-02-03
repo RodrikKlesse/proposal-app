@@ -21,7 +21,7 @@ public class ProposalService {
 
     public ProposalService(ProposalRepository proposalRepository,
                            NotificationRabbitMQService notificationRabbitMQService,
-                           @Value("${rabbitMQ.pendingproposal.exchange}") String exchange) {
+                           @Value("${rabbitmq.pendingproposal.exchange}") String exchange) {
         this.proposalRepository = proposalRepository;
         this.notificationRabbitMQService = notificationRabbitMQService;
         this.exchange = exchange;

@@ -15,10 +15,10 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMQConfig {
 
-    @Value("${rabbitMQ.pendingproposal.exchange}")
+    @Value("${rabbitmq.pendingproposal.exchange}")
     private String exchangePendingProposal;
 
-    @Value("${rabbitMQ.completedproposal.exchange}")
+    @Value("${rabbitmq.completedproposal.exchange}")
     private String exchangeCompletedProposal;
 
     @Bean
