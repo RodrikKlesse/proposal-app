@@ -20,10 +20,12 @@ public class CompletedProposalListener {
 
     @RabbitListener(queues = "${rabbitmq.queue.completed.proposal}")
     public void completedProposal(Proposal proposal) {
-        proposalRepository.save(proposal);
+        updateProposal(proposal);
 
-        ProposalResponseDTO responseDTO = ProposalMapper.INSTANCE.convertEntityToDto(proposal);
+        webSocketService.notifier(ProposalMapper.INSTANCE.convertEntityToDto(proposal));
+    }
 
-        webSocketService.notifier(responseDTO);
+    private void updateProposal(Proposal proposal) {
+        proposalRepository.updateProposal(proposal.getId(), proposal.getStatus(), proposal.getDescription());
     }
 }
