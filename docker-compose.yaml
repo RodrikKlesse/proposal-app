@@ -1,0 +1,18 @@
+version: '3.5'
+services:
+  proposal-app:
+    image: proposal-app
+    environment:
+      spring.profiles.active: prod
+    depends_on:
+      - rabbit-mq
+      - db
+    ports:
+      - "8080:8080"
+  rabbit-mq:
+    image: rabbitmq:3-management
+  db:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: rk123
+      POSTGRES_DB: proposal-app
