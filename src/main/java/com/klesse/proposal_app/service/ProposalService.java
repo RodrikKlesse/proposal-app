@@ -5,6 +5,7 @@ import com.klesse.proposal_app.dto.ProposalResponseDTO;
 import com.klesse.proposal_app.entity.Proposal;
 import com.klesse.proposal_app.mapper.ProposalMapper;
 import com.klesse.proposal_app.repository.ProposalRepository;
+import org.springframework.amqp.core.MessagePostProcessor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -31,17 +32,22 @@ public class ProposalService {
         Proposal proposal = ProposalMapper.INSTANCE.convertDtoToProposal(request);
         proposalRepository.save(proposal);
 
-        notifierRabbitMQ(proposal);
+        int priority = proposal.getUsers().getWage() > 10000 ? 10 : 5;
+        MessagePostProcessor messagePostProcessor = message -> {
+            message.getMessageProperties().setPriority(priority);
+            return message;
+        };
+
+        notifierRabbitMQ(proposal, messagePostProcessor);
 
         return ProposalMapper.INSTANCE.convertEntityToDto(proposal);
     }
 
-    private void notifierRabbitMQ(Proposal proposal) {
+    private void notifierRabbitMQ(Proposal proposal, MessagePostProcessor messagePostProcessor) {
         try {
-            notificationRabbitMQService.notify(proposal, exchange);
+            notificationRabbitMQService.notify(proposal, exchange, messagePostProcessor);
         } catch (RuntimeException ex) {
-            proposal.setIntegrate(false);
-            proposalRepository.save(proposal);
+            proposalRepository.updateStatusIntegrate(proposal.getId(), false);
         }
     }
 

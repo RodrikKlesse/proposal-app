@@ -21,9 +21,15 @@ public class RabbitMQConfig {
     @Value("${rabbitmq.completedproposal.exchange}")
     private String exchangeCompletedProposal;
 
+    @Value("${rabbitmq.pending.proposal.dlx.exchange}")
+    private String exchangePendingProposalDlx;
+
     @Bean
     public Queue createPendingProposalQueueMsCreditAnalysis() {
-        return QueueBuilder.durable("pending-proposal.ms-credit-analysis").build();
+        return QueueBuilder.durable("pending-proposal.ms-credit-analysis")
+                .deadLetterExchange(exchangePendingProposalDlx)
+                .maxPriority(10)
+                .build();
     }
 
     @Bean
@@ -98,6 +104,22 @@ public class RabbitMQConfig {
         rabbitTemplate.setMessageConverter(jackson2JsonMessageConverter());
 
         return rabbitTemplate;
+    }
 
+    //Creating Dead Letter Queue
+
+    @Bean
+    public Queue createPendingProposalQueueDlq() {
+        return QueueBuilder.durable("pending-proposal.dlq").build();
+    }
+
+    @Bean
+    public FanoutExchange deadLetterExchange() {
+        return ExchangeBuilder.fanoutExchange(exchangePendingProposalDlx).build();
+    }
+
+    @Bean
+    public Binding createBindingPendindProposalDlq() {
+        return BindingBuilder.bind(createPendingProposalQueueDlq()).to(deadLetterExchange());
     }
 }
