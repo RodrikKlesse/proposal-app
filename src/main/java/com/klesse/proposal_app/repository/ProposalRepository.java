@@ -21,6 +21,6 @@ public interface ProposalRepository extends CrudRepository<Proposal, Long> {
 
     @Transactional
     @Modifying
-    @Query(value = "UPDATE proposal SET integrate = :integrate WHERE id = :id", nativeQuery = true)
+    @Query(value = "UPDATE Proposal SET integrate = :integrate WHERE id = :id")
     void updateStatusIntegrate(Long id, boolean integrate);
 }

@@ -35,15 +35,10 @@ public class NoIntegrateProposals {
         proposalRepository.findAllByIntegrateIsFalse().forEach(proposal -> {
             try {
                 notificationRabbitMQService.notify(proposal, exchange);
-                updateProposal(proposal);
+                proposalRepository.updateStatusIntegrate(proposal.getId(), true);
             } catch (RuntimeException ex) {
                 log.error(ex.getMessage());
             }
         });
-    }
-
-    private void updateProposal(Proposal proposal) {
-        proposal.setIntegrate(true);
-        proposalRepository.save(proposal);
     }
 }
