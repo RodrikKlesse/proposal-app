@@ -3,6 +3,7 @@ package com.klesse.proposal_app.controller;
 import com.klesse.proposal_app.dto.ProposalRequestDTO;
 import com.klesse.proposal_app.dto.ProposalResponseDTO;
 import com.klesse.proposal_app.service.ProposalService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +19,7 @@ public class ProposalController {
     private ProposalService proposalService;
 
     @PostMapping("/create")
-    public ResponseEntity<ProposalResponseDTO> createProposal(@RequestBody ProposalRequestDTO request) {
+    public ResponseEntity<ProposalResponseDTO> createProposal(@Valid @RequestBody ProposalRequestDTO request) {
         ProposalResponseDTO response = proposalService.createProposal(request);
         return ResponseEntity.created(ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
